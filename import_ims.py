@@ -49,7 +49,7 @@ def ReadAdiumLog(path):
 
 def ReadHtmlLog(path):
   """Returns a (datetime, buddy, chat contents) tuple."""
-  m = re.match(r'([^ ]*) \((\d\d\d\d\|\d\d\|\d\d)\)', os.path.basename(path))
+  m = re.match(r'([^(]*) \((\d\d\d\d\|\d\d\|\d\d)\)', os.path.basename(path))
   assert m
   buddy, date = m.groups()
 
@@ -72,7 +72,10 @@ def ReadHtmlLog(path):
       else:
         parts.append(t.renderContents())
 
-    out += u''.join([p.decode('utf8') for p in parts])
+    try:
+      out += u''.join(parts)
+    except UnicodeDecodeError:
+      out += u''.join([p.decode('utf8') for p in parts])
     out += '\n'
   chat_contents = out
 
@@ -96,6 +99,10 @@ def AddToDailyLog(daily_logs, t):
   if not t: return
   date, buddy, chat_contents = t
   day = date.strftime('%Y-%m-%d')
+
+  for _, b, c in daily_logs[day]:
+    if b == buddy and c == chat_contents:
+      return
   daily_logs[day].append((date, buddy, chat_contents))
   
 
@@ -135,7 +142,6 @@ def Run(paths=None):
       print path
       AddToDailyLog(daily_logs, ReadiChatLog(path))
 
-  # TODO(danvk): de-dupe here.
   for day in sorted(daily_logs.keys()):
     d = parser.parse(day)
     chats = []  # [ (lines, user), (lines, user), ... ]
