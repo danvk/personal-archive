@@ -19,7 +19,7 @@ def MaybeMakeDirectory(day_dir):
   os.makedirs(day_dir)
 
 
-def WriteSingleSummary(d=0, maker="", summary="", thumbnail="", url=""):
+def WriteSingleSummary(d=0, maker="", summary="", thumbnail="", url="", dry_run=False):
   """Write a single entry for a given date to disk.
 
   thumbnail is optional, all other arguments are mandatory."""
@@ -37,7 +37,11 @@ def WriteSingleSummary(d=0, maker="", summary="", thumbnail="", url=""):
   if thumbnail: data['thumbnail'] = thumbnail
   if url: data['url'] = url
 
-  json.dump(data, file(filename, 'w'))
+  if dry_run:
+    print 'Would write to %s:' % filename
+    print json.dumps(data)
+  else:
+    json.dump(data, file(filename, 'w'))
 
 
 def SummarizeText(txt):

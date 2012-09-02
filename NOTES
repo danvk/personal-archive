@@ -1,14 +1,28 @@
 Things to add to the archive:
+
 - Journals (from OhLife or scans)
   x OhLife
   - Scans
   - Notes
   x OS X Journal App
   x journwfork
+
 - Chat logs
+  x 2003-08-06 backup (.adiumLog)
+  o 2004-10-04 backup
+    x .adiumLog in Old Library/Adium
+    o .html in Old Library/Adium 2.0
+  o 2005-01-17 (Adium .html)
+  o 2005-05-08 (Adium .html, maybe superset of 2005-01-17?)
+  o Damaged backup
+    Look for 'Conversation with ...'
+  o GMail chat logs (3500+)
+
 - Sent emails
   o Gmail
   o Various mbox files
+    o 2003-08-06 backup
+
 - Foursquare checkins
 - My daily weight history
 - Photos (both on disk and on various sharing services)
@@ -23,3 +37,12 @@ Things to add to the archive:
 - Documents (i.e. papers) from hard drive
 - Command lines (from .history)
 - git/github checkins
+
+
+General archive stuff:
+- Create a "staging" area w/ old IM logs, mbox files, etc.
+- Store original, unsummarized data
+- Link directly to dropbox for originals
+- Support multiple entries per day for a single maker
+- Write a viewer
+- Write a "X year(s) ago today" mailer

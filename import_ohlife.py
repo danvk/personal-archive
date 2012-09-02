@@ -18,7 +18,7 @@ def Run():
   ohlife_file = os.path.join(this_dir, '../ohlife/entries.json')
   entries = json.load(file(ohlife_file))
 
-  journal.ImportJournal(entries, 'journwfork', UrlForDay)
+  journal.ImportJournal(entries, 'ohlife', UrlForDay)
 
 
 if __name__ == '__main__':
