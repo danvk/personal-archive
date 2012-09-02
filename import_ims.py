@@ -9,24 +9,13 @@ Strategy: look through 'staging' for all these files:
 
 from BeautifulSoup import BeautifulSoup, NavigableString
 from collections import defaultdict
+import chardet
 import os
 import re
+import sys
+import utils
 from dateutil import parser
 import subprocess
-
-
-def Run():
-  logs_by_type = defaultdict(list)
-
-  log_types = set(['.adiumLog', '.chat', '.html'])
-
-  for root, dirs, files in os.walk('staging'):
-    for path in files:
-      base, ext = os.path.splitext(path)
-      full_path = os.path.join(root, path)
-
-      if ext in log_types:
-        logs_by_type[ext].append(full_path)
 
 
 def ReadAdiumLog(path):
@@ -68,6 +57,13 @@ def ReadHtmlLog(path):
   # <div class="receive"><span class="timestamp">01:25:07</span> <span class="sender">awill567: </span><pre class="message">yeah</pre></div>
   out = ""
   bs = BeautifulSoup(file(path))
+
+  try:
+    ts = bs("span", "timestamp")[0].string
+  except IndexError:
+    # Chat has no actual content. Not interesting!
+    return None
+
   for i, div in enumerate(bs("div")):
     parts = []
     for t in div:
@@ -75,12 +71,10 @@ def ReadHtmlLog(path):
         parts.append(t.string)
       else:
         parts.append(t.renderContents())
-        
-    out += ''.join(parts)
+
+    out += u''.join([p.decode('utf8') for p in parts])
     out += '\n'
   chat_contents = out
-
-  ts = bs("span", "timestamp")[0].string
 
   datetime = parser.parse(date.replace('|', '/') + ' ' + ts)
   assert datetime
@@ -96,3 +90,67 @@ def ReadiChatLog(path):
   chat_contents = lines[2:]
 
   return dt, buddy, chat_contents
+
+
+def AddToDailyLog(daily_logs, t):
+  if not t: return
+  date, buddy, chat_contents = t
+  day = date.strftime('%Y-%m-%d')
+  daily_logs[day].append((date, buddy, chat_contents))
+  
+
+def Run(paths=None):
+  logs_by_type = defaultdict(list)
+
+  log_types = set(['.adiumLog', '.chat', '.html'])
+
+  if paths:
+    for path in paths:
+      base, ext = os.path.splitext(path)
+      assert ext in log_types
+      logs_by_type[ext].append(path)
+  else:
+    for root, dirs, files in os.walk('staging'):
+      for path in files:
+        base, ext = os.path.splitext(path)
+        full_path = os.path.join(root, path)
+
+        if ext in log_types:
+          logs_by_type[ext].append(full_path)
+
+  daily_logs = defaultdict(list)  # YYYY-MM-DD -> [(date, buddy, logs), ... ]
+
+  if '.html' in logs_by_type:
+    for path in logs_by_type['.html']:
+      print path
+      AddToDailyLog(daily_logs, ReadHtmlLog(path))
+
+  if '.adiumLog' in logs_by_type:
+    for path in logs_by_type['.adiumLog']:
+      print path
+      AddToDailyLog(daily_logs, ReadAdiumLog(path))
+
+  if '.chat' in logs_by_type:
+    for path in logs_by_type['.chat']:
+      print path
+      AddToDailyLog(daily_logs, ReadiChatLog(path))
+
+  # TODO(danvk): de-dupe here.
+  for day in sorted(daily_logs.keys()):
+    d = parser.parse(day)
+    chats = []  # [ (lines, user), (lines, user), ... ]
+    for log in daily_logs[day]:
+      chats.append((log[2].count('\n'), log[1]))
+    chats.sort()
+    chats.reverse()
+
+    summary = ', '.join(['%s (%d)' % (c[1], c[0]) for c in chats])
+    summary = 'Chats with ' + summary 
+    utils.WriteSingleSummary(d, maker='chat', summary=summary, dry_run=True)
+
+
+if __name__ == '__main__':
+  if len(sys.argv) >= 2:
+    Run(sys.argv[1:])
+  else:
+    Run()

@@ -4,6 +4,8 @@ from datetime import date
 import os
 import json
 import re
+import glob
+import shutil
 
 ArchiveDirectory = os.path.expanduser("~/Dropbox/Personal Archive")
 
@@ -49,3 +51,36 @@ def SummarizeText(txt):
   txt = re.sub(r'\n+', ' ', txt)
   if len(txt) < 160: return txt
   return txt[0:157] + '...'
+
+
+def removeEmptyFolders(path):
+  if not os.path.isdir(path):
+    return
+ 
+  # remove empty subfolders
+  files = os.listdir(path)
+  if len(files):
+    for f in files:
+      fullpath = os.path.join(path, f)
+      if os.path.isdir(fullpath):
+        removeEmptyFolders(fullpath)
+ 
+  # if folder empty, delete it
+  files = os.listdir(path)
+  if len(files) == 0:
+    print "Removing empty folder:", path
+    os.rmdir(path)
+
+
+def DeleteAllForMaker(maker):
+  """Delete all traces of a particular maker in the archive directory."""
+  files = glob.glob('%s/????/??/??/%s.json' % (ArchiveDirectory, maker))
+  for path in files:
+    print 'Deleting %s' % path
+    os.remove(path)
+  dirs = glob.glob('%s/????/??/??/%s' % (ArchiveDirectory, maker))
+  for path in dirs:
+    print 'Deleting directory %s' % path
+    shutil.rmtree(path)
+
+  removeEmptyFolders(ArchiveDirectory)
