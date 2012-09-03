@@ -44,7 +44,7 @@ def ReadAdiumLog(path):
   dt = parser.parse('%s %s %s' % (date, t, timezone))
   assert dt
 
-  return dt, buddy, '\n'.join(lines[1:]) + '\n'
+  return dt, buddy, '\n'.join(lines[1:]) + '\n', path
 
 
 def ReadHtmlLog(path):
@@ -82,7 +82,7 @@ def ReadHtmlLog(path):
   datetime = parser.parse(date.replace('|', '/') + ' ' + ts)
   assert datetime
 
-  return datetime, buddy, chat_contents
+  return datetime, buddy, chat_contents, path
 
 
 def ReadiChatLog(path):
@@ -90,20 +90,20 @@ def ReadiChatLog(path):
   lines = output.split('\n')
   buddy = lines[0]
   dt = parser.parse(lines[1])
-  chat_contents = lines[2:]
+  chat_contents = '\n'.join(lines[2:]).decode('utf8') + '\n'
 
-  return dt, buddy, chat_contents
+  return dt, buddy, chat_contents, path
 
 
 def AddToDailyLog(daily_logs, t):
   if not t: return
-  date, buddy, chat_contents = t
+  date, buddy, chat_contents, path = t
   day = date.strftime('%Y-%m-%d')
 
-  for _, b, c in daily_logs[day]:
+  for _, b, c, _ in daily_logs[day]:
     if b == buddy and c == chat_contents:
       return
-  daily_logs[day].append((date, buddy, chat_contents))
+  daily_logs[day].append((date, buddy, chat_contents, path))
   
 
 def Run(paths=None):
@@ -152,7 +152,11 @@ def Run(paths=None):
 
     summary = ', '.join(['%s (%d)' % (c[1], c[0]) for c in chats])
     summary = 'Chats with ' + summary 
-    utils.WriteSingleSummary(d, maker='chat', summary=summary, dry_run=True)
+    utils.WriteSingleSummary(d, maker='chat', summary=summary)
+
+    for _, buddy, contents, path in daily_logs[day]:
+      print 'Writing %s' % path
+      utils.WriteOriginal(d, maker='chat', filename=('%s.txt' % buddy), contents=contents.encode('utf8'))
 
 
 if __name__ == '__main__':

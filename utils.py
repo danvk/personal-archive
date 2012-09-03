@@ -46,6 +46,21 @@ def WriteSingleSummary(d=0, maker="", summary="", thumbnail="", url="", dry_run=
     json.dump(data, file(filename, 'w'))
 
 
+def WriteOriginal(d=0, maker="", filename="", contents=""):
+  """Write out some unsummarized data for a particular maker.
+  
+  All arguments are required.
+  """
+  assert d
+  assert maker
+  assert filename
+  assert contents
+
+  maker_dir = '%s/%s' % (GetDirectoryForDay(d), maker)
+  MaybeMakeDirectory(maker_dir)
+  file('%s/%s' % (maker_dir, filename), 'w').write(contents)
+
+
 def SummarizeText(txt):
   """Cut text off at 160 characters and add '...' if necessary."""
   txt = re.sub(r'\n+', ' ', txt)
