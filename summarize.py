@@ -52,6 +52,12 @@ div.off {
 div.on {
   background-color: green;
 }
+div.first {
+  margin-left: 4px;
+}
+div.first-no-leap {
+  margin-left: 7px;
+}
 </style>
 </head><body>
 """
@@ -62,7 +68,13 @@ for year in range(start_year, end_year + 1):
   klasses = []
   for d in DaysInYear(year):
     count = days[d]
-    klasses.append('on' if count else 'off')
+    k = 'on' if count else 'off'
+    if d.day == 1:
+      k += ' first'
+      prev_date = (d + timedelta(days=-1))
+      if prev_date.month == 2 and prev_date.day == 28:
+        k += ' first-no-leap'
+    klasses.append(k)
 
   print ''.join(['<div class="%s"></div>' % k for k in klasses])
   print '<br/>'

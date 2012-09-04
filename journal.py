@@ -3,7 +3,8 @@
 import utils
 from datetime import datetime
 
-def ImportJournal(entries, maker, url_maker=None):
+def ImportJournal(entries, maker, url_maker=None, dry_run=False):
+  """entries maps %Y-%m-%d -> contents"""
   for date_str, entry in entries.iteritems():
     if not entry: continue
 
@@ -12,4 +13,4 @@ def ImportJournal(entries, maker, url_maker=None):
     url = None
     if url_maker:
       url = url_maker(d)
-    utils.WriteSingleSummary(d, maker=maker, summary=summary, url=url)
+    utils.WriteSingleSummary(d, maker=maker, summary=summary, url=url, dry_run=dry_run)
