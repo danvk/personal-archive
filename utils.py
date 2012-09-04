@@ -68,6 +68,31 @@ def SummarizeText(txt):
   return txt[0:157] + '...'
 
 
+def GetActiveDaysForMaker(maker):
+  """Returns a sorted list of date objects which have data for the maker."""
+  assert maker
+  dates = []
+  for path in glob.glob('%s/????/??/??/%s.json' % (ArchiveDirectory, maker)):
+    m = re.search(r'(\d\d\d\d)/(\d\d)/(\d\d)/', path)
+    assert m
+    year, month, day = m.groups()
+    dates.append(date(int(year), int(month), int(day)))
+
+  dates.sort()
+  return dates
+
+
+def GetAllMakers():
+  """Returns a list of all makers which have saved data in the archive."""
+  makers = set()
+  for path in glob.glob('%s/????/??/??/*.json' % ArchiveDirectory):
+    maker_ext = os.path.basename(path)
+    maker, ext = os.path.splitext(maker_ext)
+    makers.add(maker)
+
+  return list(makers)
+
+
 def removeEmptyFolders(path):
   if not os.path.isdir(path):
     return
