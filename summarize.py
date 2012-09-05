@@ -58,9 +58,29 @@ div.first {
 div.first-no-leap {
   margin-left: 7px;
 }
+
+div.month {
+  display: inline-block;
+  height: 15px;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  padding-bottom: 4px;
+}
+div.days31 { width: 93px; }
+div.days30 { width: 90px; }
+div.days29 { width: 87px; }
 </style>
 </head><body>
 """
+
+print '<b style="color:transparent; margin-right: 4px;">0000</b>'
+for m in range(1, 13):
+  month_name = date(2004, m, 1).strftime('%B')
+  month_length = (date(2004, (m % 12) + 1, 1) + timedelta(days=-1)).day
+  print '<div class="month days%d">%s</div>' % (month_length, month_name)
+print '<br/>'
 
 for year in range(start_year, end_year + 1):
   print '<b>%s</b>' % year

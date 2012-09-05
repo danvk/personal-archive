@@ -46,7 +46,7 @@ def WriteSingleSummary(d=0, maker="", summary="", thumbnail="", url="", dry_run=
     json.dump(data, file(filename, 'w'))
 
 
-def WriteOriginal(d=0, maker="", filename="", contents=""):
+def WriteOriginal(d=0, maker="", filename="", contents="", dry_run=False):
   """Write out some unsummarized data for a particular maker.
   
   All arguments are required.
@@ -58,7 +58,11 @@ def WriteOriginal(d=0, maker="", filename="", contents=""):
 
   maker_dir = '%s/%s' % (GetDirectoryForDay(d), maker)
   MaybeMakeDirectory(maker_dir)
-  file('%s/%s' % (maker_dir, filename), 'w').write(contents)
+  path = '%s/%s' % (maker_dir, filename)
+  if not dry_run:
+    file(path, 'w').write(contents)
+  else:
+    print 'Would write %d bytes to %s' % (len(contents), path)
 
 
 def SummarizeText(txt):

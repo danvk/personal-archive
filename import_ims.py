@@ -10,6 +10,7 @@ Strategy: look through 'staging' for all these files:
 from BeautifulSoup import BeautifulSoup, NavigableString
 from collections import defaultdict
 import chardet
+import import_gmail_chats
 import os
 import re
 import sys
@@ -95,6 +96,11 @@ def ReadiChatLog(path):
   return dt, buddy, chat_contents, path
 
 
+def ReadGmailChatLogs(path):
+  """Returns a list of (datetime, buddy) pairs."""
+  return import_gmail_chats.ReadChatData(path)
+
+
 def AddToDailyLog(daily_logs, t):
   if not t: return
   date, buddy, chat_contents, path = t
@@ -104,12 +110,12 @@ def AddToDailyLog(daily_logs, t):
     if b == buddy and c == chat_contents:
       return
   daily_logs[day].append((date, buddy, chat_contents, path))
-  
+
 
 def Run(paths=None):
   logs_by_type = defaultdict(list)
 
-  log_types = set(['.adiumLog', '.chat', '.html'])
+  log_types = set(['.adiumLog', '.chat', '.html', '.chat-json'])
 
   if paths:
     for path in paths:
@@ -126,6 +132,12 @@ def Run(paths=None):
           logs_by_type[ext].append(full_path)
 
   daily_logs = defaultdict(list)  # YYYY-MM-DD -> [(date, buddy, logs), ... ]
+
+  if '.chat-json' in logs_by_type:
+    for path in logs_by_type['.chat-json']:
+      entries = ReadGmailChatLogs(path)
+      for dt, buddy in entries:
+        AddToDailyLog(daily_logs, (dt, buddy, '', ''))
 
   if '.html' in logs_by_type:
     for path in logs_by_type['.html']:
@@ -155,6 +167,7 @@ def Run(paths=None):
     utils.WriteSingleSummary(d, maker='chat', summary=summary)
 
     for _, buddy, contents, path in daily_logs[day]:
+      if not path: continue
       print 'Writing %s' % path
       utils.WriteOriginal(d, maker='chat', filename=('%s.txt' % buddy), contents=contents.encode('utf8'))
 
