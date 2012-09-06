@@ -1,0 +1,59 @@
+body {
+  font-family: Helvetica, Arial;
+}
+
+.day {
+  display: inline-block;
+  width: 19px;
+  text-align: right;
+  font-size: smaller;
+  color: gray;
+  padding-right: 4px;
+  margin-left: 1px;
+  margin-bottom: 1px;
+}
+
+.day.on {
+  background-color: lightgreen;
+  cursor: hand;
+}
+
+.month {
+  float: left;
+  width: 150px;
+  height: 130px;
+  border: 1px solid lightgray;
+  margin-right: -1px;
+  margin-bottom: -1px;
+  padding-left: 4px;
+}
+
+.year {
+  padding-top: 10px;
+  clear: both;
+}
+
+.year h1 {
+  font-size: medium;
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.month h2 {
+  font-size: small;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 0.5em;
+}
+
+#summary {
+  position: absolute;
+  font-size: small;
+  padding: 5px;
+  width: 400px;
+  border: 1px solid black;
+  background: white;
+  display: none;
+  box-shadow: 0 0 10px gray;
+}

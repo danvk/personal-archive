@@ -1,6 +1,7 @@
 """Tools for building a personal archive in a canonical format."""
 
-from datetime import date
+from collections import defaultdict
+from datetime import date, timedelta
 import os
 import json
 import re
@@ -95,6 +96,28 @@ def GetAllMakers():
     makers.add(maker)
 
   return list(makers)
+
+
+def GetDailySummaries(dense=False):
+  """Returns a date -> maker -> summary dict mapping."""
+  days = defaultdict(lambda: {})
+
+  for path in glob.glob('%s/????/??/??/*.json' % ArchiveDirectory):
+    m = re.search(r'(\d\d\d\d)/(\d\d)/(\d\d)/([^.]+)', path)
+    assert m
+    year, month, day, maker = m.groups()
+    d = date(int(year), int(month), int(day))
+    days[d][maker] = json.load(file(path))
+
+  if dense:
+    d = date(2000, 1, 1)
+    today = date.today()
+    while d <= today:
+      if d not in days:
+        days[d] = {}
+      d += timedelta(days=+1)
+
+  return days
 
 
 def removeEmptyFolders(path):

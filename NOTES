@@ -1,12 +1,15 @@
 Things to add to the archive:
 
 - Journals (from OhLife or scans)
-  x OhLife
+  x Notes (incl. originals)
   - Scans
-  - Notes
-  x OS X Journal App
-  x journwfork
   - viJournal
+  x OhLife
+    + originals
+  x OS X Journal App
+    + originals
+  x journwfork
+    + originals
 
 - Chat logs
   x 2003-08-06 backup (.adiumLog)
@@ -17,8 +20,10 @@ Things to add to the archive:
   x 2005-05-08 (Adium .html, maybe superset of 2005-01-17?)
   x Damaged backup
     Look for 'Conversation with ...'
-  o GMail chat logs (3500+)
+  x GMail chat logs (3500+)
+    + originals
   o Trillian ("chatlog2")
+  o "old aim logs" folder in Treasure Trove
 
 - Sent emails
   o Gmail
@@ -43,8 +48,8 @@ Things to add to the archive:
 
 
 General archive stuff:
-- Create a "staging" area w/ old IM logs, mbox files, etc.
-- Store original, unsummarized data
+x Create a "staging" area w/ old IM logs, mbox files, etc.
+x Store original, unsummarized data
 - Link directly to dropbox for originals
 - Support multiple entries per day for a single maker
 - Write a viewer
