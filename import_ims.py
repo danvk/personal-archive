@@ -11,6 +11,7 @@ from BeautifulSoup import BeautifulSoup, NavigableString
 from collections import defaultdict
 import chardet
 import import_gmail_chats
+import json
 import os
 import re
 import sys
@@ -101,6 +102,18 @@ def ReadGmailChatLogs(path):
   return import_gmail_chats.ReadChatData(path)
 
 
+def ReadRecoveredLog(path):
+  """Returns a list of (datetime, buddy, contents) tuples."""
+  data = json.load(file(path))
+  try:
+    return [(parser.parse(x['date'][:19]),
+              x['buddy'],
+              x['contents']) for x in data]
+  except ValueError as e:
+    print x['date']
+    raise e
+
+
 def AddToDailyLog(daily_logs, t):
   if not t: return
   date, buddy, chat_contents, path = t
@@ -115,7 +128,7 @@ def AddToDailyLog(daily_logs, t):
 def Run(paths=None):
   logs_by_type = defaultdict(list)
 
-  log_types = set(['.adiumLog', '.chat', '.html', '.chat-json'])
+  log_types = set(['.adiumLog', '.chat', '.html', '.chat-json', '.recovered-json'])
 
   if paths:
     for path in paths:
@@ -132,6 +145,12 @@ def Run(paths=None):
           logs_by_type[ext].append(full_path)
 
   daily_logs = defaultdict(list)  # YYYY-MM-DD -> [(date, buddy, logs), ... ]
+
+  if '.recovered-json' in logs_by_type:
+    for path in logs_by_type['.recovered-json']:
+      entries = ReadRecoveredLog(path)
+      for dt, buddy, contents in entries:
+        AddToDailyLog(daily_logs, (dt, buddy, contents, ''))
 
   if '.chat-json' in logs_by_type:
     for path in logs_by_type['.chat-json']:

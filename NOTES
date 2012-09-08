@@ -10,6 +10,7 @@ Things to add to the archive:
     + originals
   x journwfork
     + originals
+  - Work journal (~/journal)
 
 - Chat logs
   x 2003-08-06 backup (.adiumLog)
@@ -24,6 +25,8 @@ Things to add to the archive:
     + originals
   o Trillian ("chatlog2")
   o "old aim logs" folder in Treasure Trove
+    - "2006" folder is not imported (from July/August 2006)
+    - "Early Google" folder is not imported
 
 - Sent emails
   o Gmail
@@ -36,7 +39,8 @@ Things to add to the archive:
 - Photos (both on disk and on various sharing services)
 - Calendar entries
 - Texts (from Google Voice)
-- Google Search History
+  -> http://code.google.com/p/pygooglevoice/
+- Google Search/Web History
 - Web history
 - Google Latitude (for some times)
 - Your reddit/hacker news upvotes
@@ -50,7 +54,25 @@ Things to add to the archive:
 General archive stuff:
 x Create a "staging" area w/ old IM logs, mbox files, etc.
 x Store original, unsummarized data
+x Write a viewer
+- Split up the "import_ims" script into individual importers.
 - Link directly to dropbox for originals
 - Support multiple entries per day for a single maker
-- Write a viewer
 - Write a "X year(s) ago today" mailer
+
+
+
+"Most Wanted" list:  (i.e. stuff I've found references to, but haven't found)
+- Claris Emailer mail
+- Anything from summer 2004 (chats? emails? journals?)
+- Anything from early senior year of college (Aug 2005-March 2006)
+  -> Import recovered chats JSON
+- Source of Trillian chat logs
+
+- Powerbook 3400c hard drive
+  - chat logs?
+  - code?
+- 250GB Seagate drive
+- PowerMac G4 hard drive
+  -> should have a bunch of stuff from late high school
+- Chats from immediately after I made my backups (e.g. summer 2005)

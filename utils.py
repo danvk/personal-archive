@@ -151,3 +151,37 @@ def DeleteAllForMaker(maker):
     shutil.rmtree(path)
 
   removeEmptyFolders(ArchiveDirectory)
+
+
+def FindFilesWithExtension(path, target_ext):
+  """Returns a list of files under the path with the given extension."""
+  matching_files = []
+  for root, dirs, files in os.walk('staging'):
+    for path in files:
+      base, ext = os.path.splitext(path)
+      if ext != target_ext: continue
+
+      full_path = os.path.join(root, path)
+      matching_files.append(full_path)
+
+  return matching_files
+
+
+class EntryAccumulator(object):
+  """This class assists in grouping items by date."""
+
+  def __init__(self, date_fn):
+    """date_fn should map item -> datetime.date"""
+    self._date_fn = date_fn
+    self._daily_logs = defaultdict(list)
+
+  def add(self, item):
+    day = self._date_fn(item)
+    assert day
+    assert isinstance(day, date)
+    self._daily_logs[day].append(item)
+
+  def iteritems(self):
+    """Iterate through (day, list of entries) in chronological order."""
+    return [(day, self._daily_logs[day])
+        for day in sorted(self._daily_logs.keys())]

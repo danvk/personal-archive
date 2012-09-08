@@ -32,7 +32,7 @@ class index:
     out.write("""<html>
 <head>
 <link rel="stylesheet" href="static/viewer.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="static/jquery-1.7.min.js"></script>
 <script src="static/viewer.js"></script>
 </head>\n""")
     for year, keys in itertools.groupby(day_keys, lambda d: d.year):
