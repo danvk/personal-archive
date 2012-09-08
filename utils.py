@@ -44,7 +44,7 @@ def WriteSingleSummary(d=0, maker="", summary="", thumbnail="", url="", dry_run=
     print 'Would write to %s:' % filename
     print json.dumps(data)
   else:
-    json.dump(data, file(filename, 'w'))
+    json.dump(data, file(filename, 'wb'))
 
 
 def WriteOriginal(d=0, maker="", filename="", contents="", dry_run=False):
@@ -61,7 +61,7 @@ def WriteOriginal(d=0, maker="", filename="", contents="", dry_run=False):
   MaybeMakeDirectory(maker_dir)
   path = '%s/%s' % (maker_dir, filename)
   if not dry_run:
-    file(path, 'w').write(contents)
+    file(path, 'wb').write(contents)
   else:
     print 'Would write %d bytes to %s' % (len(contents), path)
 
