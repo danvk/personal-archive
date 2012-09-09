@@ -1,5 +1,7 @@
 $(function() {
   $('.day.on').click(function(e) {
+    e.preventDefault();
+    e.stopPropagation();
     var date = e.target.getAttribute('d');
     var kvs = data[date];
     var keys = [];
@@ -20,6 +22,10 @@ $(function() {
         left: Math.min(e.pageX, max_x) + 'px',
         top: e.pageY + 'px'
       });
+
+    $(window).on('click', function() {
+      $('#summary').hide();
+    });
   });
 
   $('#summary').click(function() {

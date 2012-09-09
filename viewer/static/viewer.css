@@ -52,8 +52,13 @@ body {
   font-size: small;
   padding: 5px;
   width: 400px;
-  border: 1px solid black;
+  border: 1px solid gray;
   background: white;
   display: none;
   box-shadow: 0 0 10px gray;
+  min-height: 40px;
+}
+
+#calendar {
+  max-width: 960px;
 }

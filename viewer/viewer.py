@@ -34,7 +34,12 @@ class index:
 <link rel="stylesheet" href="static/viewer.css" />
 <script src="static/jquery-1.7.min.js"></script>
 <script src="static/viewer.js"></script>
-</head>\n""")
+</head>
+<body>
+""")
+
+    out.write("<div id='calendar'>\n")
+
     for year, keys in itertools.groupby(day_keys, lambda d: d.year):
       out.write('<div class=year><h1>%d</h1>\n' % year)
       for month, keys in itertools.groupby(keys, lambda d: d.month):
@@ -52,6 +57,8 @@ class index:
           out.write('%d</div>' % day.day)
         out.write('</div>\n')
       out.write('</div>\n')
+
+    out.write("</div>\n")
 
     days_rekey = {}
     for day, value in days.iteritems():

@@ -37,9 +37,6 @@ Things to add to the archive:
 - Foursquare checkins
 - My daily weight history
 - Photos (both on disk and on various sharing services)
-- Calendar entries
-- Texts (from Google Voice)
-  -> http://code.google.com/p/pygooglevoice/
 - Google Search/Web History
 - Web history
 - Google Latitude (for some times)
@@ -50,11 +47,15 @@ Things to add to the archive:
 - Command lines (from .history)
 - git/github checkins
 
+x Calendar entries
+x Texts (from Google Voice)
+
 
 General archive stuff:
 x Create a "staging" area w/ old IM logs, mbox files, etc.
 x Store original, unsummarized data
 x Write a viewer
+- Support structured times inside summaries & update existing importers.
 - Split up the "import_ims" script into individual importers.
 - Filter by source in viewer.
 - Link directly to dropbox for originals
