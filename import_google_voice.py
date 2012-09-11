@@ -10,6 +10,7 @@ import re
 import utils
 from collections import defaultdict
 from dateutil import parser
+import itertools
 
 dry_run = False
 
@@ -47,16 +48,20 @@ for idx, row in enumerate(data):
 
 for day, entries in acc.iteritems():
   # Collect all the entries into a single text file and summarize them.
-  counts = defaultdict(int)
-  text = ''
-  for row in entries:
+  others = []
+  by_other = defaultdict(list)
+  for row in sorted(entries, key=lambda r: parser.parse(r['time'])):
     other = number_to_name[row['phone']]
-    counts[other] += 1
-    direction = '->' if row['from'] == 'Me' else '<-'
-    text += '%8s %s %s: %s\n' % (row['time'], direction, other, row['text'])
+    others.append(other)
+    by_other[other].append('(%8s) %14s: %s' % (row['time'], row['from'], row['text']))
 
-  counts = sorted(counts.items(), key=lambda x: -x[1])
-  summary = ', '.join(['%s (%d)' % (c[0], c[1]) for c in counts])
+  summary = utils.OrderedTallyStr(others)
+
+  text = ''
+  for other in sorted(by_other.keys()):
+    text += '%s\n----\n' % other
+    text += '\n'.join(by_other[other])
+    text += '\n\n'
 
   utils.WriteSingleSummary(day, maker='sms', summary=summary, dry_run=dry_run)
   utils.WriteOriginal(day, maker='sms',
