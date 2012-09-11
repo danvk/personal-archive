@@ -167,6 +167,18 @@ def FindFilesWithExtension(path, target_ext):
   return matching_files
 
 
+def OrderedTallyStr(items):
+  """Given a list containing duplicates, return a summary string.
+
+  Something like "X (10), Y(4), Z"."""
+  d = defaultdict(int)
+  for x in items:
+    d[x] += 1
+  counts = sorted(d.items(), key=lambda x: -x[1])
+  summary = ', '.join([('%s (%d)' % (c[0], c[1]) if c[1] > 1 else c[0]) for c in counts])
+  return summary
+
+
 class EntryAccumulator(object):
   """This class assists in grouping items by date."""
 
