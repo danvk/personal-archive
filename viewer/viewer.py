@@ -3,8 +3,11 @@
 import web
 import sys
 import json
-from datetime import date
+import os
+from datetime import date, datetime
 from cStringIO import StringIO
+from pyth.plugins.rtf15.reader import Rtf15Reader
+from pyth.plugins.xhtml.writer import XHTMLWriter
 import itertools
 
 sys.path.append('..')
@@ -12,7 +15,8 @@ sys.path.append('..')
 import utils
 
 urls = (
-  '/', 'index'
+  '/', 'index',
+  '/day/(\d\d\d\d/\d\d/\d\d)', 'oneday'
 )
 
 
@@ -31,9 +35,9 @@ class index:
     out = StringIO()
     out.write("""<html>
 <head>
-<link rel="stylesheet" href="static/viewer.css" />
-<script src="static/jquery-1.7.min.js"></script>
-<script src="static/viewer.js"></script>
+<link rel="stylesheet" href="/static/viewer.css" />
+<script src="/static/jquery-1.7.min.js"></script>
+<script src="/static/viewer.js"></script>
 </head>
 <body>
 """)
@@ -69,6 +73,49 @@ class index:
     out.write('<script type="text/javascript">var data=%s;</script>' % json.dumps(days_rekey))
     out.write('</html>')
     return out.getvalue()
+
+
+class oneday:
+  def GET(self, day):
+    out = StringIO()
+    out.write("""<html>
+<head>
+<link rel="stylesheet" href="/static/viewer.css" />
+<script src="/static/jquery-1.7.min.js"></script>
+</head>
+<body>
+<div id="oneday">
+""")
+    data = utils.GetOneDay(datetime.strptime(day, '%Y/%m/%d').date())
+    for maker in sorted(data.keys()):
+      out.write('<h2>%s</h2>\n' % maker)
+      # TODO(danvk): include URL, thumbnail if available.
+      out.write('<p>%s</p>\n' % data[maker]['summary']['summary'].encode('utf8'))
+
+      if 'originals' in data[maker]:
+        originals = data[maker]['originals']
+        for filename in sorted(originals.keys()):
+          out.write('<h3>%s</h3>\n' % filename)
+          _, ext = os.path.splitext(filename)
+          if ext == '.txt':
+            out.write('<pre>%s</pre>\n' % originals[filename])
+          elif ext == '.html':
+            out.write(originals[filename])
+          elif ext == '.rtf':
+            f = StringIO.StringIO(contents)
+            doc = Rtf15Reader.read(f)
+            html = XHTMLWriter.write(doc).getvalue()
+            out.write(html)
+          else:
+            out.write('<p>(Unknown format "%s")</p>' % ext)
+            
+
+      out.write('<hr/>\n')
+
+    out.write('</div></body></html>')
+    return out.getvalue()
+      
+
 
 
 if __name__ == "__main__": 

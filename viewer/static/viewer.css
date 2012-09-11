@@ -62,3 +62,11 @@ body {
 #calendar {
   max-width: 960px;
 }
+
+#oneday {
+  max-width: 800px;
+}
+
+#oneday > pre {
+  white-space: pre-wrap;
+}

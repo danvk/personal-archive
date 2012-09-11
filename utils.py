@@ -123,6 +123,30 @@ def GetDailySummaries(dense=False):
   return days
 
 
+def GetOneDay(day):
+  """Returns a mapping:
+  maker -> {
+    'summary': { 'summary': '', 'thumbnail': '', ... },
+    'originals': { 'filename1': 'contents1', ... }
+  }
+  """
+  out = {}
+  day_dir = GetDirectoryForDay(day)
+  for path in glob.glob(day_dir + '/*.json'):
+    basename = os.path.basename(path)
+    maker, ext = os.path.splitext(basename)
+    out[maker] = {}
+    out[maker]['summary'] = json.load(file(path))
+    originals = {}
+    for orig_path in glob.glob('%s/%s/*' % (day_dir, maker)):
+      orig_name = os.path.basename(orig_path)
+      originals[orig_name] = file(orig_path).read()
+    if originals:
+      out[maker]['originals'] = originals
+
+  return out
+
+
 def removeEmptyFolders(path):
   if not os.path.isdir(path):
     return

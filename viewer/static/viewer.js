@@ -12,6 +12,7 @@ $(function() {
     $.each(keys, function(i, maker) {
       html += '<div><b>' + maker + '</b>: ' + kvs[maker]['summary'].replace(/\n/g, '<br/>') + '</div>\n';
     });
+    html += '<a href="/day/' + date.replace(/-/g, '/') + '">More</a>';
 
     var max_x = $(document.body).width() - $('#summary').width();
 
