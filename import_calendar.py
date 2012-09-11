@@ -43,7 +43,7 @@ for day, entry in acc.iteritems():
   summary = ''
   for start, stop, description, where in sorted(entry):
     summary += '%s: %s' % (FormatRange(start, stop), description)
-    if where != 'None':
+    if where != 'None' and where not in description:
       summary += ' @ ' + where
     summary += '\n'
 

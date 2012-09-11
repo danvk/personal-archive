@@ -10,7 +10,7 @@ $(function() {
 
     var html = '';
     $.each(keys, function(i, maker) {
-      html += '<div><b>' + maker + '</b>: ' + kvs[maker]['summary'] + '</div>\n';
+      html += '<div><b>' + maker + '</b>: ' + kvs[maker]['summary'].replace(/\n/g, '<br/>') + '</div>\n';
     });
 
     var max_x = $(document.body).width() - $('#summary').width();
