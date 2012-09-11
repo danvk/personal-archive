@@ -70,13 +70,11 @@ for f in sys.argv[1:]:
     acc.add((headers['Sent'], headers['To'], contents))
 
 
-def removeNonAscii(s):
-  return "".join(i for i in s if ord(i)<128)
-
-
 for day, entries in acc.iteritems():
   summary = utils.OrderedTallyStr([x[1] for x in entries])
-  utils.WriteSingleSummary(day, maker='old-emails', summary=removeNonAscii(summary), dry_run=dry_run)
+  utils.WriteSingleSummary(day, maker='old-emails',
+      summary=utils.RemoveNonAscii(summary), dry_run=dry_run)
 
   original = '\n\n\n'.join([entry[2] for entry in entries])
-  utils.WriteOriginal(day, maker='old-emails', contents=original, filename='emails.txt', dry_run=dry_run)
+  utils.WriteOriginal(day, maker='old-emails', contents=original,
+      filename='emails.txt', dry_run=dry_run)

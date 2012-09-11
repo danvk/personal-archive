@@ -106,6 +106,9 @@ def GetDailySummaries(dense=False):
     m = re.search(r'(\d\d\d\d)/(\d\d)/(\d\d)/([^.]+)', path)
     assert m
     year, month, day, maker = m.groups()
+    if year < 2000:
+      # (for now)
+      continue
     d = date(int(year), int(month), int(day))
     days[d][maker] = json.load(file(path))
 
@@ -177,6 +180,10 @@ def OrderedTallyStr(items):
   counts = sorted(d.items(), key=lambda x: -x[1])
   summary = ', '.join([('%s (%d)' % (c[0], c[1]) if c[1] > 1 else c[0]) for c in counts])
   return summary
+
+
+def RemoveNonAscii(s):
+  return "".join(i for i in s if ord(i)<128)
 
 
 class EntryAccumulator(object):
