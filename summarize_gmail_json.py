@@ -9,7 +9,9 @@ import json
 import email.parser
 import datetime
 import dateutil.parser
+
 import utils
+import gmail_utils
 
 assert len(sys.argv) == 3
 command, input_json = sys.argv[1:]
@@ -18,43 +20,11 @@ assert command in ['dates', 'from', 'subjects']
 data = json.load(file(input_json))
 
 
-def ParseMessagePair(msg):
-  """Returns structured data about the message given a [body, header] pair."""
-  body = msg[0][1]
-  header = msg[1][1]
-  body = re.sub(r'\r\n', '\n', body)
-
-  out = {}
-
-  fp = email.parser.FeedParser()
-  fp.feed(header)
-  fp.feed(body)
-  m = fp.close()
-  assert m
-  if not m['Date']:
-    # TODO(danvk): what are these?
-    return None
-
-  out['subject'] = m['Subject']
-  out['from'] = m['From']
-  try:
-    dt = dateutil.parser.parse(m['Date'])
-  except ValueError as e:
-    # TODO(danvk): look into these
-    sys.stderr.write('Unable to parse %s\n' % m['Date'])
-    # TODO(danvk): use send timestamp instead
-    return None
-
-  out['date'] = dt
-  out['contents'] = body
-  return out
-
-
 for idx, msg_pair in enumerate(data):
-  msg = ParseMessagePair(msg_pair)
+  msg = gmail_utils.ParseMessagePair(msg_pair)
   if not msg: continue
 
   if command == 'dates':
-    print dt.strftime('%Y-%m-%d') + ' %s' % msg['date']
+    print msg['date'].strftime('%Y-%m-%d') + ' %s' % msg['date']
   elif command == 'from':
     print msg['from']

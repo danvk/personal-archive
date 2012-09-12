@@ -1,37 +1,46 @@
 #!/usr/bin/python2.7
 
+from collections import defaultdict
+import re
 import email
 import json
 import sys
 from dateutil import parser
+import gmail_utils
+import utils
 
-def ReadChatData(json_file):
-  """Returns a list of (buddy, datetime) pairs."""
-  msg_data = json.load(file(json_file))
+dry_run = False
 
-  chats = []
-  for idx, msg in enumerate(msg_data):
-    if msg == ')': continue
 
-    assert len(msg) == 2
-    assert ' (BODY[HEADER]' in msg[0]
-    headers = msg[1]
+def Run(json_path):
+  acc = utils.EntryAccumulator(lambda x: x['date'].date())
 
-    m = email.message_from_string(headers.encode('utf8'))
-    dt = parser.parse(m['Date'])
+  data = json.load(file(json_path))
+  for idx, msg in enumerate(data):
+    data = gmail_utils.ParseMessagePair(msg, 'text/html')
+    acc.add(data)
 
-    if not m['From']:
-      sys.stderr.write('Chat w/o From line: %d' % idx)
-      continue
+  for day, entries in acc.iteritems():
+    day_counts = defaultdict(int)
+    user_chats = defaultdict(list)
 
-    # TODO(danvk): get link via the Message-ID parameter?
-    buddy = m['From']
+    for msg in entries:
+      m = re.search(r'([0-9a-zA-Z.]+)@', msg['from'])
+      assert m, msg['from']
+      buddy = m.group(1)
+      day_counts[msg['from']] += msg['contents'].count('<div>')
+      user_chats[buddy].append(msg['contents'])
 
-    chats.append((dt, buddy))
-
-  return chats
+    summary = utils.OrderedTallyStr(day_counts)
+    utils.WriteSingleSummary(day, 'gmail-chat', summary=summary, dry_run=dry_run)
+    for user, chats in user_chats.iteritems():
+      filename = user + '.html'
+      contents = '<html>' + '<hr/>\n'.join(chats) + '</html>'
+      utils.WriteOriginal(day, 'gmail-chat', filename=filename,
+          contents=contents.encode('utf8'), dry_run=dry_run)
 
 
 if __name__ == '__main__':
   assert 2 == len(sys.argv)
-  data = ReadChatData(sys.argv[1])
+  Run(sys.argv[1])
+

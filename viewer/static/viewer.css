@@ -20,7 +20,7 @@ body {
 
 .month {
   float: left;
-  width: 150px;
+  width: 175px;
   height: 130px;
   border: 1px solid lightgray;
   margin-right: -1px;
@@ -60,7 +60,7 @@ body {
 }
 
 #calendar {
-  max-width: 960px;
+  max-width: 1096px;
 }
 
 #oneday {

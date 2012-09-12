@@ -10,7 +10,6 @@ Strategy: look through 'staging' for all these files:
 from BeautifulSoup import BeautifulSoup, NavigableString
 from collections import defaultdict
 import chardet
-import import_gmail_chats
 import json
 import os
 import re
@@ -97,10 +96,6 @@ def ReadiChatLog(path):
   return dt, buddy, chat_contents, path
 
 
-def ReadGmailChatLogs(path):
-  """Returns a list of (datetime, buddy) pairs."""
-  return import_gmail_chats.ReadChatData(path)
-
 
 def ReadRecoveredLog(path):
   """Returns a list of (datetime, buddy, contents) tuples."""
@@ -128,7 +123,7 @@ def AddToDailyLog(daily_logs, t):
 def Run(paths=None):
   logs_by_type = defaultdict(list)
 
-  log_types = set(['.adiumLog', '.chat', '.html', '.chat-json', '.recovered-json'])
+  log_types = set(['.adiumLog', '.chat', '.html', '.recovered-json'])
 
   if paths:
     for path in paths:

@@ -196,11 +196,16 @@ def FindFilesWithExtension(path, target_ext):
 
 def OrderedTallyStr(items):
   """Given a list containing duplicates, return a summary string.
+  items may also be a dict mapping string -> count.
 
   Something like "X (10), Y(4), Z"."""
   d = defaultdict(int)
-  for x in items:
-    d[x] += 1
+  if isinstance(items, dict):
+    for x, cnt in items.iteritems():
+      d[x] += cnt
+  else:
+    for x in items:
+      d[x] += 1
   counts = sorted(d.items(), key=lambda x: -x[1])
   summary = ', '.join([('%s (%d)' % (c[0], c[1]) if c[1] > 1 else c[0]) for c in counts])
   return summary
