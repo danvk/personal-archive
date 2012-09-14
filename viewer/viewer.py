@@ -4,7 +4,8 @@ import web
 import sys
 import json
 import os
-from datetime import date, datetime
+from collections import defaultdict
+from datetime import date, datetime, timedelta
 from cStringIO import StringIO
 from pyth.plugins.rtf15.reader import Rtf15Reader
 from pyth.plugins.xhtml.writer import XHTMLWriter
@@ -16,15 +17,37 @@ import utils
 
 urls = (
   '/', 'index',
-  '/day/(\d\d\d\d/\d\d/\d\d)', 'oneday'
+  '/day/(\d\d\d\d/\d\d/\d\d)', 'oneday',
+  '/get_summary', 'get_summary',
+  '/coverage', 'coverage'
 )
 
+start_year = 2000
+end_year = date.today().year
 
 def USWeekDay(d):
   """Returns weekday, US-style (0=Sunday, 6=Saturday)."""
   w = d.weekday()
   if w == 6: return 0
   return w + 1
+
+
+def DaysInYear(year):
+  days = []
+  d = date(year, 1, 1)
+  while d.year == year:
+    days.append(d)
+    d += timedelta(days=1)
+  return days
+
+
+def RekeyDates(d):
+  """Rekeys a dict by YYYY-MM-DD instead of date objects."""
+  rekey = {}
+  for day, value in d.iteritems():
+    if value:
+      rekey[day.strftime('%Y-%m-%d')] = value
+  return rekey
 
 
 class index:
@@ -64,13 +87,8 @@ class index:
 
     out.write("</div>\n")
 
-    days_rekey = {}
-    for day, value in days.iteritems():
-      if value:
-        days_rekey[day.strftime('%Y-%m-%d')] = value
-
     out.write('<div id=summary></div>');
-    out.write('<script type="text/javascript">var data=%s;</script>' % json.dumps(days_rekey))
+    out.write('<script type="text/javascript">var data=%s;</script>' % json.dumps(RekeyDates(days)))
     out.write('</html>')
     return out.getvalue()
 
@@ -114,10 +132,71 @@ class oneday:
 
     out.write('</div></body></html>')
     return out.getvalue()
-      
 
+
+class get_summary:
+  def POST(self):
+    params = web.input()
+    day_str = params['day']
+    day = datetime.strptime(day_str, '%Y-%m-%d')
+    print 'Day: %s' % day
+    return json.dumps(utils.GetSummariesForDay(day))
+
+
+
+class coverage:
+  def GET(self):
+    makers = utils.GetAllMakers()
+    days = utils.GetDailySummaries()
+
+    out = StringIO()
+    out.write('''<html>
+<head>
+  <link rel=stylesheet href='/static/coverage.css' />
+  <script type="text/javascript">
+    var makers = %s;
+    var day_to_makers = %s;
+  </script>
+</head>
+<body>
+  <b style="color:transparent; margin-right: 4px;">0000</b>
+  ''' % (json.dumps(makers), json.dumps(RekeyDates(days))))
+
+    for m in range(1, 13):
+      month_name = date(2004, m, 1).strftime('%B')
+      month_length = (date(2004, (m % 12) + 1, 1) + timedelta(days=-1)).day
+      out.write('<div class="month days%d">%s</div>\n' % (month_length, month_name))
+    out.write('<br/>\n')
+
+    for year in range(start_year, end_year + 1):
+      out.write('<b>%s</b>\n' % year)
+
+      klasses = []
+      for d in DaysInYear(year):
+        k = 'on' if d in days else 'off'
+        if d.day == 1:
+          k += ' first'
+          prev_date = (d + timedelta(days=-1))
+          if prev_date.month == 2 and prev_date.day == 28:
+            k += ' first-no-leap'
+        klasses.append(k)
+
+      out.write(''.join(['<div class="%s"></div>' % k for k in klasses]))
+      out.write('\n<br/>\n')
+
+    out.write("""
+  </body>
+  </html>
+  """)
+    return out.getvalue()
+      
 
 
 if __name__ == "__main__": 
   app = web.application(urls, globals())
   app.run()        
+
+# Useful bits:
+# web.header('Content-Type', 'text/plain')
+# params = web.input()
+# params['id']

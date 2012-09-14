@@ -147,12 +147,6 @@ def Run(paths=None):
       for dt, buddy, contents in entries:
         AddToDailyLog(daily_logs, (dt, buddy, contents, ''))
 
-  if '.chat-json' in logs_by_type:
-    for path in logs_by_type['.chat-json']:
-      entries = ReadGmailChatLogs(path)
-      for dt, buddy in entries:
-        AddToDailyLog(daily_logs, (dt, buddy, '', ''))
-
   if '.html' in logs_by_type:
     for path in logs_by_type['.html']:
       print path

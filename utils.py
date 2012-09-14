@@ -99,8 +99,8 @@ def GetAllMakers():
 
 
 def GetDailySummaries(dense=False):
-  """Returns a date -> maker -> summary dict mapping."""
-  days = defaultdict(lambda: {})
+  """Returns a date -> [makers] mapping."""
+  days = defaultdict(list)
 
   for path in glob.glob('%s/????/??/??/*.json' % ArchiveDirectory):
     m = re.search(r'(\d\d\d\d)/(\d\d)/(\d\d)/([^.]+)', path)
@@ -110,17 +110,30 @@ def GetDailySummaries(dense=False):
       # (for now)
       continue
     d = date(int(year), int(month), int(day))
-    days[d][maker] = json.load(file(path))
+    days[d].append(maker)
 
   if dense:
     d = date(2000, 1, 1)
     today = date.today()
     while d <= today:
       if d not in days:
-        days[d] = {}
+        days[d] = []
       d += timedelta(days=+1)
 
   return days
+
+
+def GetSummariesForDay(d):
+  """Returns a maker -> summary dict mapping for the day."""
+  summaries = glob.glob('%s/%s/*.json' % (
+      ArchiveDirectory, d.strftime('%Y/%m/%d')))
+  out = {}
+  for path in summaries:
+    basename = os.path.basename(path)
+    maker, ext = os.path.splitext(basename)
+    out[maker] = json.load(file(path))
+
+  return out
 
 
 def GetOneDay(day):
@@ -224,6 +237,7 @@ class EntryAccumulator(object):
     self._daily_logs = defaultdict(list)
 
   def add(self, item):
+    assert item != None
     day = self._date_fn(item)
     assert day
     assert isinstance(day, date)

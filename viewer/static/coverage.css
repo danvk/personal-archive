@@ -1,0 +1,32 @@
+div.off, div.on {
+  display: inline-block;
+  width: 3px;
+  height: 15px;
+  padding: 0;
+  margin: 0;
+}
+div.off {
+  background-color: lightgray;
+}
+div.on {
+  background-color: green;
+}
+div.first {
+  margin-left: 4px;
+}
+div.first-no-leap {
+  margin-left: 7px;
+}
+
+div.month {
+  display: inline-block;
+  height: 15px;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-weight: bold;
+  padding-bottom: 4px;
+}
+div.days31 { width: 93px; }
+div.days30 { width: 90px; }
+div.days29 { width: 87px; }
