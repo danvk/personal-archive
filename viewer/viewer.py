@@ -153,10 +153,12 @@ class coverage:
     out.write('''<html>
 <head>
   <link rel=stylesheet href='/static/coverage.css' />
+  <script src="/static/jquery-1.7.min.js"></script>
   <script type="text/javascript">
     var makers = %s;
     var day_to_makers = %s;
   </script>
+  <script src="/static/coverage.js"></script>
 </head>
 <body>
   <b style="color:transparent; margin-right: 4px;">0000</b>
@@ -169,7 +171,7 @@ class coverage:
     out.write('<br/>\n')
 
     for year in range(start_year, end_year + 1):
-      out.write('<b>%s</b>\n' % year)
+      out.write('<div class=year><b>%s</b>\n' % year)
 
       klasses = []
       for d in DaysInYear(year):
@@ -182,9 +184,15 @@ class coverage:
         klasses.append(k)
 
       out.write(''.join(['<div class="%s"></div>' % k for k in klasses]))
-      out.write('\n<br/>\n')
+      out.write('\n</div>\n')
 
     out.write("""
+  <div id=checks></div>
+  <p>
+    <button id='btnNone'>Select None</button>
+    &nbsp; &nbsp;
+    <button id='btnAll'>Select All</button>
+  </p>
   </body>
   </html>
   """)
