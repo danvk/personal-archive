@@ -146,7 +146,7 @@ class get_summary:
 
 class coverage:
   def GET(self):
-    makers = utils.GetAllMakers()
+    makers = sorted(utils.GetAllMakers())
     days = utils.GetDailySummaries()
 
     out = StringIO()

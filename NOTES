@@ -62,13 +62,14 @@ General archive stuff:
 x Create a "staging" area w/ old IM logs, mbox files, etc.
 x Store original, unsummarized data
 x Write a viewer
+x Filter by source in coverage.
+x Incorporate "summary" view into viewer
+- Filter by source in viewer.
 - Support structured times inside summaries & update existing importers.
 - Split up the "import_ims" script into individual importers.
-- Filter by source in viewer.
 - Link directly to dropbox for originals
 - Support multiple entries per day for a single maker
 - Write a "X year(s) ago today" mailer
-- Incorporate "summary" view into viewer
 
 
 
@@ -85,4 +86,5 @@ x Write a viewer
 - 250GB Seagate drive
 - PowerMac G4 hard drive
   -> should have a bunch of stuff from late high school
+  -> should also have email/chats from summers & winter breaks during college.
 - Chats from immediately after I made my backups (e.g. summer 2005)
