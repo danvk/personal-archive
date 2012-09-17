@@ -29,6 +29,7 @@ $(function() {
   // Update on/off classes to reflect the checkboxes.
   var update_classes = function() {
     var makers = collect_checked_makers();
+    var num_on = 0;
     $('.year').each(function(idx, div) {
       var $year = $(div);
       var y = parseInt($('b', $year).text(), 10);
@@ -53,9 +54,12 @@ $(function() {
           }
         }
 
+        if (on) num_on++;
         $(div).removeClass('on off').addClass(on ? 'on' : 'off');
       });
     });
+
+    $('#num-on').text(num_on);
   };
 
   $('input[type=checkbox]').click(function(e) {
@@ -71,4 +75,6 @@ $(function() {
     $('input[type=checkbox]').prop('checked', 'checked');
     update_classes();
   });
+
+  update_classes();
 });

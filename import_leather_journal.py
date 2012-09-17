@@ -9,14 +9,14 @@ contents
 """
 
 import os
+import sys
 import journal
 from collections import defaultdict
 from datetime import date
 from dateutil import parser
 
 
-def Run():
-  leather_file = 'staging/leather.transcribed.txt'
+def Run(maker, leather_file):
   lines = file(leather_file).read().split('\n')
 
   by_date = defaultdict(str)  # yyyy-mm-dd -> journal
@@ -39,8 +39,10 @@ def Run():
     by_date[last_date] += lines[i] + '\n'
     i += 1
 
-  journal.ImportJournal(by_date, 'leather-journal')
+  journal.ImportJournal(by_date, maker)
+  sys.stderr.write('Imported %d entries under "%s"\n' % (len(by_date), maker))
 
 
 if __name__ == '__main__':
-  Run()
+  assert len(sys.argv) == 3, "Usage: %s (maker) (path to journal)"
+  Run(sys.argv[1], sys.argv[2])

@@ -67,9 +67,9 @@ class index:
 
     out.write("<div id='calendar'>\n")
 
-    for year, keys in itertools.groupby(day_keys, lambda d: d.year):
+    for year, keys in itertools.groupby(reversed(list(day_keys)), lambda d: d.year):
       out.write('<div class=year><h1>%d</h1>\n' % year)
-      for month, keys in itertools.groupby(keys, lambda d: d.month):
+      for month, keys in itertools.groupby(reversed(list(keys)), lambda d: d.month):
         out.write('<div class="month month-%d">\n' % month)
         start_d = date(year, month, 1)
         out.write('<h2>%s</h2>' % start_d.strftime('%B'))
@@ -187,6 +187,7 @@ class coverage:
       out.write('\n</div>\n')
 
     out.write("""
+  <p><span id="num-on"></span> days with activity.</p>
   <div id=checks></div>
   <p>
     <button id='btnNone'>Select None</button>
