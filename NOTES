@@ -59,6 +59,7 @@ Things to add to the archive:
 - git/github checkins
 - Runkeeper
 - When I listened to things in iTunes/Spotify?
+- Blog posts
 
 x Calendar entries
 - Texts (from Google Voice)
@@ -77,6 +78,8 @@ x Incorporate "summary" view into viewer
 - Link directly to dropbox for originals
 - Support multiple entries per day for a single maker
 - Write a "X year(s) ago today" mailer
+- Fix up encoding stuff.
+  -> ex broken URL: http://localhost:8080/day/2003/01/02
 
 
 

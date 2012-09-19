@@ -1,7 +1,8 @@
 #!/usr/bin/python
 """Imports entries in the Leather Journal into my archive.
 
-Assumes data is in staging/leather.transcribed.txt.
+Usage: ./import_leather_journal.py (maker) (path to journal.txt)
+
 Format is:
 ----
 (date)
@@ -10,14 +11,18 @@ contents
 
 import os
 import sys
+import chardet
 import journal
 from collections import defaultdict
 from datetime import date
 from dateutil import parser
 
 
-def Run(maker, leather_file):
-  lines = file(leather_file).read().split('\n')
+def Run(maker, path):
+  data = file(path).read()
+  enc = chardet.detect(data)['encoding']
+  data = data.decode(enc)
+  lines = data.split('\n')
 
   by_date = defaultdict(str)  # yyyy-mm-dd -> journal
 

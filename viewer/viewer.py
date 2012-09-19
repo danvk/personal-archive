@@ -120,7 +120,7 @@ class oneday:
           elif ext == '.html':
             out.write(originals[filename])
           elif ext == '.rtf':
-            f = StringIO.StringIO(contents)
+            f = StringIO(originals[filename])
             doc = Rtf15Reader.read(f)
             html = XHTMLWriter.write(doc).getvalue()
             out.write(html)
