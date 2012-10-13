@@ -4,6 +4,25 @@ This project aims to collect all your digital debris and make it useful. This
 could be your gmails, chat logs on old hard drives, foursquare checkins, photos
 or journals.
 
+
+----------------------------------------------------
+                     Quick start
+----------------------------------------------------
+
+echo "~/Dropbox/Personal Archive" > personal-archive.config
+./import_ims.py path/to/an/adium/logs/dir
+./viewer/viewer.py
+
+Visit http://localhost:8080/
+
+For more types of data that you can import, see "Specific Importers", below.
+
+
+
+----------------------------------------------------
+                     Overview
+----------------------------------------------------
+
 There are three main parts to the project:
 
 1. Archival Storage
@@ -90,10 +109,9 @@ individual makers.
 
 
 
-
-------------------
-Specific importers
-------------------
+----------------------------------------------------
+                 Specific Importers
+----------------------------------------------------
 
 
 GMail Chat
@@ -175,6 +193,7 @@ import_journal.py script. The format is described in that file. Then you can
 run:
 
 ./import_journal.py journal path/to/your/journal.txt
+
 
 
 

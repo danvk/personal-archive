@@ -16,8 +16,8 @@ def GetArchiveDir():
   global ArchiveDirectory
   if ArchiveDirectory:
     return ArchiveDirectory
-  config = json.load(file("config.json"))
-  ArchiveDirectory = os.path.expanduser(config['archive-directory'])
+  d = file("personal-archive.config").read().strip()
+  ArchiveDirectory = os.path.expanduser(d)
   return ArchiveDirectory
 
 
