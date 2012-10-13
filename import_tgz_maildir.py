@@ -1,5 +1,11 @@
 #!/usr/bin/python2.7
-"""Imports the "Old Mail of unknown provenance" .tar.gz files."""
+"""Imports emails in maildir format (one file per message) in a .tar.gz files.
+
+Usage:
+./import_tgz_maildir.py path/to/maildir.tar.gz
+
+Imports using the maker 'old-emails'.
+"""
 
 import chardet
 import tarfile
