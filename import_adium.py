@@ -1,10 +1,6 @@
 #!/usr/bin/python2.7
 """Import Adium chat logs (i.e. ".adiumLog").
 
-Sources of these:
-2003/08/06 backup (IM Logs.sit)
-
-
 Format:
 A 2003-02-24 -0600
 (20:41:18)iambatman456:how are you?
@@ -53,7 +49,7 @@ def ReadAdiumLog(path):
   return dt, buddy, '\n'.join(lines[1:]) + '\n'
 
 
-def Run():
+def Run(dirs):
   for d in dirs:
     logs = glob.glob('%s/*/*.adiumLog' % d)
     print 'Found %d logs' % len(logs)
@@ -78,4 +74,8 @@ def Run():
 
 
 if __name__ == '__main__':
-  Run()
+  if len(sys.argv) == 1:
+    sys.stderr.write('Usage: %s path/to/Adium/Users/username/Logs\n');
+    sys.exit(1)
+
+  Run(sys.argv[1:])

@@ -91,9 +91,98 @@ individual makers.
 
 
 
+------------------
+Specific importers
+------------------
+
+
+GMail Chat
+----------
+
+Create a file called "gmail-credentials.js", and fill it out like so:
+
+{
+  "email": "youremail@gmail.com",
+  "password": "yourpassword"
+}
+
+Then run
+chmod 600 gmail-credentials.js
+
+To make sure no one else can read your password.
+
+Now follow the instructions here to enable chat downloading over IMAP: 
+http://dataliberation.blogspot.com/2011/09/gmail-liberates-recorded-chat-logs-via.html
+
+Finally, download all the messages to your staging dir and import them:
+
+mkdir staging
+./download_gmail_folder.py '[Gmail]/Chats' staging/chats.gmail.json
+./import_gmail_chats.py staging/chats.gmail.json
+
+
+Google Voice
+------------
+
+Install pygooglevoice (http://code.google.com/p/pygooglevoice/).
+Install this patch: http://productforums.google.com/forum/#!topic/voice/OS-abSdgz-k
+
+Run:
+./sms2csv.py
+./import_google_voice.py staging/GVsms\ 2012-09-08\ 12-34-56.csv
+
+You'll likely have to modify the import_google_voice.py script to point at the
+right location and include names for a few extra numbers.
+
+
+Adium Chat Logs
+---------------
+
+Copy all your IM Logs (either in the old .adiumLog format or the newer .html
+format) into some subdirectory of the staging directory.
+
+Then run:
+./import_ims.py staging/adium-logs
+
+This will crawl the staging/adium-logs directory, looking for all chat logs. It
+will import them under the "chats" maker.
+
+
+mbox files
+----------
+
+Find all your sent mail mbox files and convert them to JSON:
+find (root) -name 'mbox' -iregex '.*sent.*' -print0 | xargs -0 ./scan-mbox.py --output_json > staging/sent-mbox.json
+
+Import from the JSON:
+./import_sent_mbox.py staging/sent-mbox.json
+
+
+Maildir
+-------
+
+You'll have to tar and gzip your maildir before importing it:
+
+tar -czf staging/maildir.tgz path/to/maildir
+./import_tgz_maildir.py staging/maildir.tgz
+
+
+Personal Journals
+-----------------
+
+You'll have to get your journal into a very specific format to use the
+import_journal.py script. The format is described in that file. Then you can
+run:
+
+./import_journal.py journal path/to/your/journal.txt
+
 
 
 TODOs:
+- Standardize command-line arguments for import scripts
+  -> --dry_run
+  -> --maker
+- Remove danvk-specific importers
 - Filter by source in viewer.
 - Support structured times inside summaries & update existing importers.
 - Split up the "import_ims" script into individual importers.

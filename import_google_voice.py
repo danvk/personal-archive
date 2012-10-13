@@ -6,7 +6,9 @@ the staging directory.
 """
 
 import csv
+import json
 import re
+import sys
 import utils
 from collections import defaultdict
 from dateutil import parser
@@ -14,19 +16,24 @@ import itertools
 
 dry_run = False
 
-sms_file = 'staging/GVsms 2012-09-08 18-24-18.csv'
+if len(sys.argv) != 2:
+  sys.stderr.write('Usage: %s path/to/gvsms.csv\n', sys.argv[0])
+  sys.exit(1)
+
+
+sms_file = sys.arv[1]
 data = csv.DictReader(file(sms_file))
 
 # Prepopulated with a few special numbers that have never texted me back.
-number_to_name = {
-  '+12077250808': 'David Quaid',
-  '+14153519439': 'Jeremy Ginsberg',
-  '+18185770007': 'Dani Derse',
-  '+16464508191': 'Alastair Tse?',
-  '+14155137688': 'Bradvertising',
-  '+13472212282': 'Anthony Robredo'
-  # There are a bunch of other numbers that are numbers only (no names)
-}
+# Sample google-voice.config.json file:
+# {
+#   "extra-numbers": {
+#     "+19876543210": "John Doe",
+#     "+11234567890": "Jane Doe"
+#   }
+# }
+config = json.load(file("google-voice.config.json"))
+number_to_name = config['extra-numbers']
 acc = utils.EntryAccumulator(lambda row: parser.parse(row['date']))
 
 for idx, row in enumerate(data):

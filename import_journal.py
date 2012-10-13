@@ -1,12 +1,19 @@
 #!/usr/bin/python
-"""Imports entries in the Leather Journal into my archive.
+"""Imports entries in the a journal into the archive.
 
-Usage: ./import_leather_journal.py (maker) (path to journal.txt)
+Usage: ./import_journal.py (maker) (path to journal.txt)
 
-Format is:
+Entries in the journal are delimited by a line with four dashes followed by the
+date, followed by the entry, like so:
 ----
-(date)
-contents
+(date1)
+contents1
+
+----
+(date2)
+contents2
+
+...
 """
 
 import os
