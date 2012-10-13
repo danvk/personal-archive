@@ -1,0 +1,107 @@
+Personal Archive Project
+
+This project aims to collect all your digital debris and make it useful. This
+could be your gmails, chat logs on old hard drives, foursquare checkins, photos
+or journals.
+
+There are three main parts to the project:
+
+1. Archival Storage
+2. Data Import
+3. Data Exploration
+
+
+Archival Storage
+----------------
+
+At its most basic level, the Personal Archive Project is a directory structure
+and a file format. It looks something like:
+
+[Personal Archive Folder]
+  - 2000
+    - 07
+      - 01
+        + chats.json
+        - chats
+          + chat1.txt
+          + chat2.txt
+        + sent-mail.json
+        - sent-mail
+          + message1.txt
+          + message2.txt
+
+There's a folder for each year. These contain folders for each month. And these
+contain folders for each day.
+
+Within each day's folder, there are entries for each Maker.
+
+A Maker is something which puts data into the personal archive.
+
+For each day, a Maker produces a summary of the day's activity in JSON format.
+It looks something like this:
+
+{"summary": "02:08 PM: Joe & Amy's wedding"}
+
+This is always stored in a file named [maker].json. If there's additional
+information that the maker would like to store (perhaps full emails or chat
+transcripts), then it may do so inside a folder named [maker]. Hence
+"chats.json" and "chats/chat[12].txt" in the example above.
+
+This format is designed to be simple and easily grep'able. It is also
+compatible with manual exploration, whether in the Finder/Windows Explorer or
+in the Dropbox application (should you choose to put your Personal Archive on
+Dropbox).
+
+The Personal Archive Project includes some utilities for generating data in
+this format. See below.
+
+
+Data Import
+-----------
+
+The Personal Archive Project includes some scripts to import common data
+formats into its own directory & file formats. For example:
+
+./download_gmail_folder.py "[Gmail]/Sent Mail" staging/sent-msgs.gmail.json
+./import_gmail_folder.py --maker 'sent-gmail' staging/sent-msgs.gmail.json
+
+This will download all of your Gmail sent messages (i.e. the things you
+actually typed) and import them under the 'sent-gmail' maker.
+
+See below for info on how to import common formats.
+
+Everyone has their own unique data sources. If you'd like to write your own
+importer, check out utils.py.
+
+
+
+Data Exploration
+----------------
+
+The Personal Archive Project includes a web viewer to help you explore the data
+you've imported. To use it, run:
+
+./viewer/viewer.py
+
+Then visit http://localhost:8080/
+
+You can visit http://localhost:8080/coverage to get a sense for the coverage of
+individual makers.
+
+
+
+
+
+
+TODOs:
+- Filter by source in viewer.
+- Support structured times inside summaries & update existing importers.
+- Split up the "import_ims" script into individual importers.
+- Link directly to dropbox for originals
+- Support multiple entries per day for a single maker
+- Write a "X year(s) ago today" mailer
+- Fix up encoding stuff.
+  -> ex broken URL: http://localhost:8080/day/2003/01/02
+- Make "More" link more prominent & open in new tab.
+- Add direct links to each Maker's content on the one-day page.
+- Integrate the /coverage page into the main display.

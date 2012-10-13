@@ -1,4 +1,9 @@
 #!/usr/bin/python2.7
+"""
+Imports "notes to self", i.e. emails that I sent myself in gmail.
+If you've set up a label for these, you can download all of the messages using
+download_gmail_folder.py, then run this script to import them.
+"""
 
 from collections import defaultdict
 import json

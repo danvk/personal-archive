@@ -4,6 +4,8 @@ import web
 import sys
 import json
 import os
+import posixpath
+import urllib
 from collections import defaultdict
 from datetime import date, datetime, timedelta
 from cStringIO import StringIO
@@ -13,7 +15,7 @@ import itertools
 
 import pyth.plugins.rtf15.reader
 
-sys.path.append('..')
+sys.path.append('.')
 
 import utils
 
@@ -203,11 +205,48 @@ class coverage:
   </html>
   """)
     return out.getvalue()
+
+
+# via http://stackoverflow.com/questions/6960295/changing-the-static-directory-path-in-webpy
+class StaticMiddleware:
+  """WSGI middleware for serving static files."""
+  def __init__(self, app, prefix='/static/', root_path='viewer/static'):
+    self.app = app
+    self.prefix = prefix
+    self.root_path = root_path
+
+  def __call__(self, environ, start_response):
+    path = environ.get('PATH_INFO', '')
+    path = self.normpath(path)
+
+    if path.startswith(self.prefix):
+      environ["PATH_INFO"] = os.path.join(self.root_path, web.lstrips(path, self.prefix))
+      return web.httpserver.StaticApp(environ, start_response)
+    else:
+      return self.app(environ, start_response)
+
+  def normpath(self, path):
+    path2 = posixpath.normpath(urllib.unquote(path))
+    if path.endswith("/"):
+      path2 += "/"
+    return path2
+
       
 
 
 if __name__ == "__main__": 
   app = web.application(urls, globals())
+  wsgifunc = app.wsgifunc()
+  wsgifunc = StaticMiddleware(wsgifunc)
+  wsgifunc = web.httpserver.LogMiddleware(wsgifunc)
+
+  server = web.httpserver.WSGIServer(("0.0.0.0", 8080), wsgifunc)
+  print "http://%s:%d/" % ("0.0.0.0", 8080)
+  try:
+    server.start()
+  except KeyboardInterrupt:
+    server.stop()
+
   app.run()        
 
 # Useful bits:

@@ -1,5 +1,8 @@
 #!/usr/bin/python2.7
-"""Scrape foursquare data into staging/foursquare.json"""
+"""Scrape foursquare data into staging/foursquare.json
+
+TODO: Write up the simplest way to get a Foursquare OAuth token.
+"""
 
 import sys
 import json

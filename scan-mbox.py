@@ -1,4 +1,7 @@
 #!/usr/bin/python2.7
+#
+# This is a tool for analyzing the contents of mbox files which are potentially
+# read from stdin (convenient if the original source is gzipped, say).
 
 import sys
 import json

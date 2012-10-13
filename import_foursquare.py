@@ -1,4 +1,12 @@
 #!/usr/bin/python2.7
+#
+# Imports previously-downloaded foursquare checkins.
+#
+# Usage:
+# ./import_foursquare.py path/to/foursquare.checkins.json
+#
+# Imports under the "foursquare" maker.
+# See download_foursquare.py for more info on generating this JSON file.
 
 import sys
 import json

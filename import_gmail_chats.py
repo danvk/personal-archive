@@ -1,4 +1,16 @@
 #!/usr/bin/python2.7
+"""
+Imports Gmail chats which have previously been downloaded using download_gmail_folder.py.
+See instructions there for more info.
+
+Note that you will have to follow these instructions to enable chat logs over IMAP:
+http://dataliberation.blogspot.com/2011/09/gmail-liberates-recorded-chat-logs-via.html
+
+Usage:
+./import_gmail_chats.py path/to/gmail-chats.gmail.json
+
+Imports under the 'gmail-chat' maker.
+"""
 
 from collections import defaultdict
 import re

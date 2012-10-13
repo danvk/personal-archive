@@ -83,25 +83,6 @@ x Calendar entries
   -> Something is odd w/ the day breaks: http://localhost:8080/day/2012/08/17
 
 
-General archive stuff:
-x Create a "staging" area w/ old IM logs, mbox files, etc.
-x Store original, unsummarized data
-x Write a viewer
-x Filter by source in coverage.
-x Incorporate "summary" view into viewer
-- Filter by source in viewer.
-- Support structured times inside summaries & update existing importers.
-- Split up the "import_ims" script into individual importers.
-- Link directly to dropbox for originals
-- Support multiple entries per day for a single maker
-- Write a "X year(s) ago today" mailer
-- Fix up encoding stuff.
-  -> ex broken URL: http://localhost:8080/day/2003/01/02
-- Make "More" link more prominent & open in new tab.
-- Add direct links to each Maker's content on the one-day page.
-
-
-
 "Most Wanted" list:  (i.e. stuff I've found references to, but haven't found)
 - Claris Emailer mail
 - Anything from summer 2004 (chats? emails? journals?)

@@ -8,12 +8,22 @@ import re
 import glob
 import shutil
 
-ArchiveDirectory = os.path.expanduser("~/Dropbox/Personal Archive")
+ArchiveDirectory = None
+
+
+def GetArchiveDir():
+  """Returns path to the personal archive root dir."""
+  global ArchiveDirectory
+  if ArchiveDirectory:
+    return ArchiveDirectory
+  config = json.load(file("config.json"))
+  ArchiveDirectory = os.path.expanduser(config['archive-directory'])
+  return ArchiveDirectory
 
 
 def GetDirectoryForDay(d):
   """Returns path to (Personal Archive)/YYYY/MM/DD."""
-  return '%s/%04d/%02d/%02d' % (ArchiveDirectory, d.year, d.month, d.day)
+  return '%s/%04d/%02d/%02d' % (GetArchiveDir(), d.year, d.month, d.day)
 
 
 def MaybeMakeDirectory(day_dir):
@@ -77,7 +87,7 @@ def GetActiveDaysForMaker(maker):
   """Returns a sorted list of date objects which have data for the maker."""
   assert maker
   dates = []
-  for path in glob.glob('%s/????/??/??/%s.json' % (ArchiveDirectory, maker)):
+  for path in glob.glob('%s/????/??/??/%s.json' % (GetArchiveDir(), maker)):
     m = re.search(r'(\d\d\d\d)/(\d\d)/(\d\d)/', path)
     assert m
     year, month, day = m.groups()
@@ -90,7 +100,7 @@ def GetActiveDaysForMaker(maker):
 def GetAllMakers():
   """Returns a list of all makers which have saved data in the archive."""
   makers = set()
-  for path in glob.glob('%s/????/??/??/*.json' % ArchiveDirectory):
+  for path in glob.glob('%s/????/??/??/*.json' % GetArchiveDir()):
     maker_ext = os.path.basename(path)
     maker, ext = os.path.splitext(maker_ext)
     makers.add(maker)
@@ -102,7 +112,7 @@ def GetDailySummaries(dense=False):
   """Returns a date -> [makers] mapping."""
   days = defaultdict(list)
 
-  for path in glob.glob('%s/????/??/??/*.json' % ArchiveDirectory):
+  for path in glob.glob('%s/????/??/??/*.json' % GetArchiveDir()):
     m = re.search(r'(\d\d\d\d)/(\d\d)/(\d\d)/([^.]+)', path)
     assert m
     year, month, day, maker = m.groups()
@@ -126,7 +136,7 @@ def GetDailySummaries(dense=False):
 def GetSummariesForDay(d):
   """Returns a maker -> summary dict mapping for the day."""
   summaries = glob.glob('%s/%s/*.json' % (
-      ArchiveDirectory, d.strftime('%Y/%m/%d')))
+      GetArchiveDir(), d.strftime('%Y/%m/%d')))
   out = {}
   for path in summaries:
     basename = os.path.basename(path)
@@ -181,16 +191,16 @@ def removeEmptyFolders(path):
 
 def DeleteAllForMaker(maker):
   """Delete all traces of a particular maker in the archive directory."""
-  files = glob.glob('%s/????/??/??/%s.json' % (ArchiveDirectory, maker))
+  files = glob.glob('%s/????/??/??/%s.json' % (GetArchiveDir(), maker))
   for path in files:
     print 'Deleting %s' % path
     os.remove(path)
-  dirs = glob.glob('%s/????/??/??/%s' % (ArchiveDirectory, maker))
+  dirs = glob.glob('%s/????/??/??/%s' % (GetArchiveDir(), maker))
   for path in dirs:
     print 'Deleting directory %s' % path
     shutil.rmtree(path)
 
-  removeEmptyFolders(ArchiveDirectory)
+  removeEmptyFolders(GetArchiveDir())
 
 
 def FindFilesWithExtension(path, target_ext):
