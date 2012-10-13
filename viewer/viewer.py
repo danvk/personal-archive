@@ -11,9 +11,14 @@ from pyth.plugins.rtf15.reader import Rtf15Reader
 from pyth.plugins.xhtml.writer import XHTMLWriter
 import itertools
 
+import pyth.plugins.rtf15.reader
+
 sys.path.append('..')
 
 import utils
+
+# HACK!
+pyth.plugins.rtf15.reader._CODEPAGES[78] = "10001"
 
 urls = (
   '/', 'index',

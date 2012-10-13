@@ -9,10 +9,8 @@ Things to add to the archive:
     - Red
   - viJournal
   x OhLife
-    + originals
   x OS X Journal App
   x journwfork
-  - Work journal (~/journal)
 
 - Chat logs
   x 2003-08-06 backup (.adiumLog)
@@ -21,8 +19,9 @@ Things to add to the archive:
     x .html in Old Library/Adium 2.0
   x 2005-01-17 (Adium .html)
   x 2005-05-08 (Adium .html, maybe superset of 2005-01-17?)
-  x Damaged backup
+  - Damaged backup
     Look for 'Conversation with ...'
+    + originals
   x GMail chat logs (3500+)
     + originals
   o Trillian ("chatlog2")
@@ -39,17 +38,33 @@ Things to add to the archive:
     -> 433 messages -- is this all?
     -> Is this from Claris Emailer?
   x Various mbox files from backup CDs.
+    -> Don't include attachments (e.g. http://localhost:8080/day/2004/12/06)
   o "old-mported" folder in Gmail
     -> This spans 2002-08 to 2005-06 and appears to be quite dense.
     -> It's only _received_ messages, not sent messages.
     -> Many sent messages are quoted.
 
+- Work stuff
+  - journal (~/journal)
+  - daily tasks
+  - scans of daily notebooks?
+  - perforce
 
-- Foursquare checkins
-- My daily weight history
+
 - Photos (both on disk and on various sharing services)
+  -> Picasaweb (two albums in 2007, mostly from 2009-2012)
+  -> iPhone folders
+  -> Misc images from old hard drives
+  -> Flickr? (just the Ireland trip)
+
+- When I listened to things in iTunes/Spotify?
+  -> iTunes Music Library.xml has "last played", "added" and "modified" fields
+
 - Google Search/Web History
-- Web history
+  -> Goes back to March 8, 2007
+
+- My daily weight history
+- Web history (Chrome?)
 - Google Latitude (for some times)
 - Your reddit/hacker news upvotes
 - Trips (either via mail or tripit)
@@ -58,9 +73,11 @@ Things to add to the archive:
 - Command lines (from .history)
 - git/github checkins
 - Runkeeper
-- When I listened to things in iTunes/Spotify?
 - Blog posts
+- Repeatables
+- Habit List
 
+x Foursquare checkins
 x Calendar entries
 - Texts (from Google Voice)
   -> Something is odd w/ the day breaks: http://localhost:8080/day/2012/08/17
@@ -80,6 +97,8 @@ x Incorporate "summary" view into viewer
 - Write a "X year(s) ago today" mailer
 - Fix up encoding stuff.
   -> ex broken URL: http://localhost:8080/day/2003/01/02
+- Make "More" link more prominent & open in new tab.
+- Add direct links to each Maker's content on the one-day page.
 
 
 
@@ -89,6 +108,7 @@ x Incorporate "summary" view into viewer
 - Anything from early senior year of college (Aug 2005-March 2006)
   -> Import recovered chats JSON
 - Source of Trillian chat logs
+- "3D Snake" program referenced in Red Journal (page 9ish)
 
 - Powerbook 3400c hard drive
   - chat logs?

@@ -245,5 +245,6 @@ class EntryAccumulator(object):
 
   def iteritems(self):
     """Iterate through (day, list of entries) in chronological order."""
+    # TODO: make this a real iterator
     return [(day, self._daily_logs[day])
         for day in sorted(self._daily_logs.keys())]

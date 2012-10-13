@@ -6,7 +6,7 @@ import json
 import urllib2
 
 assert len(sys.argv) == 3, (
-  'Usage: %s OAUTH_TOKEN output.json' % sys.argv[0])
+  'Usage: %s OAUTH_TOKEN foursquare.checkins.json' % sys.argv[0])
 
 oauth_token, output_file = sys.argv[1:]
 

@@ -5,17 +5,20 @@ import plistlib
 import journal
 import os
 import re
+import sys
 import utils
+import pyth.plugins.rtf15.reader
 from pyth.plugins.rtf15.reader import Rtf15Reader
 from pyth.plugins.plaintext.writer import PlaintextWriter
 
 import StringIO
 
+# HACK!
+pyth.plugins.rtf15.reader._CODEPAGES[78] = "10001"
+
 dry_run = False
 
-def Run():
-  this_dir = os.path.dirname(__file__)
-  journal_file = os.path.join(this_dir, '../old journal app/journal.dat')
+def Run(journal_file):
   raw_entries = plistlib.readPlist(journal_file)
 
   acc = utils.EntryAccumulator(lambda x: x['date'])
@@ -27,7 +30,11 @@ def Run():
 
     if isinstance(v, plistlib.Data):
       f = StringIO.StringIO(v.data)
-      doc = Rtf15Reader.read(f)
+      try:
+        doc = Rtf15Reader.read(f)
+      except ValueError as e:
+        print v.data
+        raise e
       txt = PlaintextWriter.write(doc).getvalue()
       acc.add({
         'date': d,
@@ -44,6 +51,9 @@ def Run():
     assert len(entries) == 1
     entry = entries[0]
 
+    if not entry['text']:
+      continue
+
     summary = utils.SummarizeText(entry['text'])
     utils.WriteSingleSummary(day, maker='osxapp', summary=summary, dry_run=dry_run)
     if 'rtf' in entry:
@@ -53,4 +63,5 @@ def Run():
 
 
 if __name__ == '__main__':
-  Run()
+  journal_dat = sys.argv[1]
+  Run(journal_dat)
